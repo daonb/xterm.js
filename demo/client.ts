@@ -253,7 +253,8 @@ function createTerminal(): void {
   addons.fit.instance = new FitAddon();
   addons.unicode11.instance = new Unicode11Addon();
   try {  // try to start with webgl renderer (might throw on older safari/webkit)
-    addons.webgl.instance = new WebglAddon();
+    const canvas = document.createElement('canvas'); // TODO: remove this when webgl addon is done
+    addons.webgl.instance = new WebglAddon(canvas, { x: 200, y: 20 });
   } catch (e) {
     console.warn(e);
   }

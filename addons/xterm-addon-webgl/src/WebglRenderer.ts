@@ -69,7 +69,9 @@ export class WebglRenderer extends Disposable implements IRenderer {
     private readonly _decorationService: IDecorationService,
     private readonly _optionsService: IOptionsService,
     private readonly _themeService: IThemeService,
-    preserveDrawingBuffer?: boolean
+    preserveDrawingBuffer?: boolean,
+    canvas?: HTMLCanvasElement,
+    private _offset: { x: number, y: number} = { x: 0, y: 0 }
   ) {
     super();
 
@@ -88,7 +90,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
     this._updateDimensions();
     this.register(_optionsService.onOptionChange(() => this._handleOptionsChanged()));
 
-    this._canvas = document.createElement('canvas');
+    this._canvas = canvas || document.createElement('canvas');
 
     const contextAttributes = {
       antialias: false,
@@ -325,6 +327,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
         return;
       }
     }
+
+    this._gl.viewport(this._offset.x, 0, this._canvas.width - this._offset.x, this._canvas.height - this._offset.y);
 
     // Update render layers
     for (const l of this._renderLayers) {
