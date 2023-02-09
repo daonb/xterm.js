@@ -21,7 +21,7 @@
  *   http://linux.die.net/man/7/urxvt
  */
 
-import { ICompositionHelper, ITerminal, IBrowser, CustomKeyEventHandler, IViewport, ILinkifier2, CharacterJoinerHandler, IBufferRange } from 'browser/Types';
+import { ICompositionHelper, ITerminal, IBrowser, CustomKeyEventHandler, IViewport, ILinkifier2, CharacterJoinerHandler, IBufferRange, IBufferElementProvider } from 'browser/Types';
 import { IRenderer } from 'browser/renderer/shared/Types';
 import { CompositionHelper } from 'browser/input/CompositionHelper';
 import { Viewport } from 'browser/Viewport';
@@ -191,6 +191,13 @@ export class Terminal extends CoreTerminal implements ITerminal {
       this._customKeyEventHandler = undefined;
       this.element?.parentNode?.removeChild(this.element);
     }));
+  }
+
+  public registerBufferElementProvider(bufferProvider: IBufferElementProvider): IDisposable {
+    if (!this._accessibleBuffer) {
+      throw new Error ('Cannot register buffer element provider when terminal has not been opened yet');
+    }
+    return this._accessibleBuffer.registerBufferElementProvider(bufferProvider);
   }
 
   /**
@@ -771,7 +778,7 @@ export class Terminal extends CoreTerminal implements ITerminal {
      */
     this.register(addDisposableDomListener(el, 'mousedown', (ev: MouseEvent) => {
       ev.preventDefault();
-      if (this._accessibleBuffer?.isAccessibilityBufferActive) {
+      if (this._accessibleBuffer?.isAccessibleBufferActive) {
         return;
       }
       this.focus();
