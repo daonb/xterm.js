@@ -71,7 +71,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
     private readonly _themeService: IThemeService,
     preserveDrawingBuffer?: boolean,
     canvas?: HTMLCanvasElement,
-    private _offset: { x: number, y: number} = { x: 0, y: 0 }
+    private _offset: { x: number, y: number, width: number, height: number } = { x: 0, y: 0, width: 1000, height: 1000 }
   ) {
     super();
 
@@ -101,8 +101,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
     if (!this._gl) {
       throw new Error('WebGL2 not supported ' + this._gl);
     }
-
-    this._gl.enable(this._gl.SCISSOR_TEST);
 
     this.register(addDisposableDomListener(this._canvas, 'webglcontextlost', (e) => {
       console.log('webglcontextlost event received');
@@ -330,8 +328,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
       }
     }
 
-    this._gl.viewport(this._offset.x, -this._offset.y, this._canvas.width, this._canvas.height);
-    this._gl.scissor(this._offset.x - 50, this._offset.y, this._canvas.width - this._offset.x, this._canvas.height - this._offset.y);
+    // this._gl.viewport(this._offset.x, -this._offset.y, this._canvas.width, this._canvas.height);
+    this._gl.scissor(this._offset.x, this._offset.y, this._offset.width, this._offset.height);
 
     // Update render layers
     for (const l of this._renderLayers) {

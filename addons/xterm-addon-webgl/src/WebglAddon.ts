@@ -27,7 +27,7 @@ export class WebglAddon extends Disposable implements ITerminalAddon {
 
   constructor(
     private _canvas?: HTMLCanvasElement,
-    private _coordinates?: { x: number, y: number },
+    private _coordinates?: { x: number, y: number, width: number, height: number },
     private _preserveDrawingBuffer?: boolean
   ) {
     if (isSafari && getSafariVersion() < 16) {

@@ -212,7 +212,9 @@ if (document.location.pathname === '/test') {
   window.WebLinksAddon = WebLinksAddon;
   window.WebglAddon = WebglAddon;
 } else {
-  createTerminal();
+  /* createTerminal();
+  createTerminal(100, 50); */
+  createTerminals();
   document.getElementById('dispose').addEventListener('click', disposeRecreateButtonHandler);
   document.getElementById('create-new-window').addEventListener('click', createNewWindowButtonHandler);
   document.getElementById('serialize').addEventListener('click', serializeButtonHandler);
@@ -232,7 +234,31 @@ if (document.location.pathname === '/test') {
   addVtButtons();
 }
 
-function createTerminal(): void {
+function createTerminals(): void {
+    const term1 = new Terminal({
+        allowProposedApi: true,
+        fontFamily: '"Fira Code", courier-new, courier, monospace, "Powerline Extra Symbols"',
+        theme: xtermjsTheme,
+        rows: 10,
+        cols: 90
+    });
+    const term2 = new Terminal({
+        allowProposedApi: true,
+        fontFamily: '"Fira Code", courier-new, courier, monospace, "Powerline Extra Symbols"',
+        theme: xtermjsTheme,
+    });
+    const canvas = document.getElementById('webgl-canvas');
+    const webgl1 = new WebglAddon(canvas);
+    const webgl2 = new WebglAddon(canvas, { x: 200, y: 50});
+    term1.loadAddon(webgl1);
+    term2.loadAddon(webgl2);
+    term1.open(document.getElementById('terminal-container1'));
+    term1.write('WebGL 1');
+    term2.open(document.getElementById('terminal-container2'));
+    term2.write('WebGL 2');
+}
+
+function createTerminal(offsetX = 0, offsetY = 0): void {
   // Clean terminal
   while (terminalContainer.children.length) {
     terminalContainer.removeChild(terminalContainer.children[0]);
@@ -253,8 +279,8 @@ function createTerminal(): void {
   addons.fit.instance = new FitAddon();
   addons.unicode11.instance = new Unicode11Addon();
   try {  // try to start with webgl renderer (might throw on older safari/webkit)
-    const canvas = document.createElement('canvas'); // TODO: remove this when webgl addon is done
-    addons.webgl.instance = new WebglAddon(canvas, { x: 200, y: 20 });
+    const canvas = document.getElementById('webgl-canvas'); // TODO: remove this when webgl addon is done
+    addons.webgl.instance = new WebglAddon(canvas, { x: offsetX, y: offsetY });
   } catch (e) {
     console.warn(e);
   }
