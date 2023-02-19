@@ -102,6 +102,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
       throw new Error('WebGL2 not supported ' + this._gl);
     }
 
+    this._gl.enable(this._gl.SCISSOR_TEST);
+
     this.register(addDisposableDomListener(this._canvas, 'webglcontextlost', (e) => {
       console.log('webglcontextlost event received');
       // Prevent the default behavior in order to enable WebGL context restoration.
@@ -328,7 +330,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
       }
     }
 
-    this._gl.viewport(this._offset.x, 0, this._canvas.width - this._offset.x, this._canvas.height - this._offset.y);
+    this._gl.viewport(this._offset.x, -this._offset.y, this._canvas.width, this._canvas.height);
+    this._gl.scissor(this._offset.x - 50, this._offset.y, this._canvas.width - this._offset.x, this._canvas.height - this._offset.y);
 
     // Update render layers
     for (const l of this._renderLayers) {
