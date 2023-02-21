@@ -90,14 +90,14 @@ export class WebglRenderer extends Disposable implements IRenderer {
     this._updateDimensions();
     this.register(_optionsService.onOptionChange(() => this._handleOptionsChanged()));
 
-    this._canvas = canvas || document.createElement('canvas');
+    this._canvas = document.createElement('canvas');
 
     const contextAttributes = {
       antialias: false,
       depth: false,
       preserveDrawingBuffer
     };
-    this._gl = this._canvas.getContext('webgl2', contextAttributes) as IWebGL2RenderingContext;
+    this._gl = (canvas || this._canvas).getContext('webgl2', contextAttributes) as IWebGL2RenderingContext;
     if (!this._gl) {
       throw new Error('WebGL2 not supported ' + this._gl);
     }
@@ -318,6 +318,15 @@ export class WebglRenderer extends Disposable implements IRenderer {
   }
 
   public renderRows(start: number, end: number): void {
+
+    const rect = this._core.screenElement!.getBoundingClientRect(),
+      { left, bottom, width, height } = rect;
+
+    console.log(rect)
+    // this._gl.enable(this._gl.SCISSOR_TEST);
+
+    // this._gl.viewport(left, bottom, width, height);
+    this._gl.scissor(left, bottom, width, height);
     if (!this._isAttached) {
       if (this._coreBrowserService.window.document.body.contains(this._core.screenElement!) && this._charSizeService.width && this._charSizeService.height) {
         this._updateDimensions();
@@ -327,9 +336,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
         return;
       }
     }
-
     // this._gl.viewport(this._offset.x, -this._offset.y, this._canvas.width, this._canvas.height);
-    this._gl.scissor(this._offset.x, this._offset.y, this._offset.width, this._offset.height);
+    // this._gl.scissor(this._offset.x, this._offset.y, this._offset.width, this._offset.height);
 
     // Update render layers
     for (const l of this._renderLayers) {
