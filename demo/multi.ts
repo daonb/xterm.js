@@ -14,7 +14,7 @@ const term1 = new Terminal({
     cursorBlink: true,
     cursorStyle: 'block',
     fontSize: 14,
-    cols: 60,
+    cols: 80,
 });
 
 const term2 = new Terminal({
@@ -27,15 +27,20 @@ const term2 = new Terminal({
     }
 });
 
+const canvas = document.getElementById('canvas');
+
+canvas.setAttribute('width', document.body.clientWidth.toString());
+canvas.setAttribute('height', window.innerHeight.toString());
+
 const webglAddon1 = new WebglAddon(document.getElementById('canvas'));
 term1.loadAddon(webglAddon1);
 
 term1.open(document.getElementById('term1-container'));
 term1.write("term1")
 
-const webglAddon2 = new WebglAddon(document.getElementById('canvas'), { x: 50, y: 50, width: 100, height: 100 });
+/* const webglAddon2 = new WebglAddon(document.getElementById('canvas'), { x: 50, y: 50, width: 100, height: 100 });
 term2.loadAddon(webglAddon2);
 
 term2.open(document.getElementById('term2-container'));
-term2.write("term2")
+term2.write("term2") */
 

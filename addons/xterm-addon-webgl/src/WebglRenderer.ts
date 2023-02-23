@@ -70,7 +70,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
     private readonly _optionsService: IOptionsService,
     private readonly _themeService: IThemeService,
     preserveDrawingBuffer?: boolean,
-    canvas?: HTMLCanvasElement,
+    gl?: WebGL2RenderingContext | null,
     private _offset: { x: number, y: number, width: number, height: number } = { x: 0, y: 0, width: 1000, height: 1000 }
   ) {
     super();
@@ -97,7 +97,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
       depth: false,
       preserveDrawingBuffer
     };
-    this._gl = (canvas || this._canvas).getContext('webgl2', contextAttributes) as IWebGL2RenderingContext;
+    this._gl = (gl || this._canvas.getContext('webgl2', contextAttributes)) as IWebGL2RenderingContext;
     if (!this._gl) {
       throw new Error('WebGL2 not supported ' + this._gl);
     }
@@ -323,7 +323,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
       { left, bottom, width, height } = rect;
 
     console.log(rect)
-    // this._gl.enable(this._gl.SCISSOR_TEST);
+    this._gl.enable(this._gl.SCISSOR_TEST);
 
     // this._gl.viewport(left, bottom, width, height);
     this._gl.scissor(left, bottom, width, height);
