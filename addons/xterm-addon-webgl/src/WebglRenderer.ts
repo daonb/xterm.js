@@ -319,14 +319,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
 
   public renderRows(start: number, end: number): void {
 
-    const rect = this._core.screenElement!.getBoundingClientRect(),
-      { left, bottom, width, height } = rect;
-
-    console.log(rect)
-    this._gl.enable(this._gl.SCISSOR_TEST);
-
-    // this._gl.viewport(left, bottom, width, height);
-    this._gl.scissor(left, bottom, width, height);
     if (!this._isAttached) {
       if (this._coreBrowserService.window.document.body.contains(this._core.screenElement!) && this._charSizeService.width && this._charSizeService.height) {
         this._updateDimensions();
@@ -336,8 +328,14 @@ export class WebglRenderer extends Disposable implements IRenderer {
         return;
       }
     }
-    // this._gl.viewport(this._offset.x, -this._offset.y, this._canvas.width, this._canvas.height);
-    // this._gl.scissor(this._offset.x, this._offset.y, this._offset.width, this._offset.height);
+    const rect = this._canvas.getBoundingClientRect(),
+      { left, bottom, width, height } = rect;
+
+    this._gl.disable(this._gl.SCISSOR_TEST);
+    this._gl.enable(this._gl.SCISSOR_TEST);
+
+    this._gl.viewport(left, this._gl.canvas.height - bottom, width, height);
+    this._gl.scissor(left, this._gl.canvas.height - bottom, width, height);
 
     // Update render layers
     for (const l of this._renderLayers) {
