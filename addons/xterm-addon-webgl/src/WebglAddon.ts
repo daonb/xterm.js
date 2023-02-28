@@ -27,7 +27,6 @@ export class WebglAddon extends Disposable implements ITerminalAddon {
 
   constructor(
     private _canvas?: HTMLCanvasElement,
-    private _coordinates?: { x: number, y: number, width: number, height: number },
     private _preserveDrawingBuffer?: boolean
   ) {
     if (isSafari && getSafariVersion() < 16) {
@@ -68,9 +67,8 @@ export class WebglAddon extends Disposable implements ITerminalAddon {
       this._canvas?.getContext('webgl2', { 
           antialias: false,
           depth: false,
-          preserveDrawingBuffer: this._preserveDrawingBuffer,
-      }),
-      this._coordinates
+          preserveDrawingBuffer: true,
+      })
     ));
     this.register(forwardEvent(this._renderer.onContextLoss, this._onContextLoss));
     this.register(forwardEvent(this._renderer.onChangeTextureAtlas, this._onChangeTextureAtlas));

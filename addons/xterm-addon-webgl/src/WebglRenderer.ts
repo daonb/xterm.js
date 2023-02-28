@@ -71,7 +71,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
     private readonly _themeService: IThemeService,
     preserveDrawingBuffer?: boolean,
     gl?: WebGL2RenderingContext | null,
-    private _offset: { x: number, y: number, width: number, height: number } = { x: 0, y: 0, width: 1000, height: 1000 }
   ) {
     super();
 
