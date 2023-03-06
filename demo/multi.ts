@@ -29,8 +29,10 @@ const term2 = new Terminal({
 
 const canvas = document.getElementById('canvas');
 
-canvas.setAttribute('width', canvas.clientWidth.toString());
-canvas.setAttribute('height', canvas.clientHeight.toString());
+/* canvas.setAttribute('width', canvas.clientWidth.toString());
+canvas.setAttribute('height', "768");
+canvas.style.width = canvas.clientWidth.toString() + "px";
+canvas.style.height = "768px"; */
 
 const webglAddon1 = new WebglAddon(canvas);
 term1.loadAddon(webglAddon1);
