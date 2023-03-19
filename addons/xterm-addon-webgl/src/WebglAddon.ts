@@ -64,7 +64,7 @@ export class WebglAddon extends Disposable implements ITerminalAddon {
       optionsService,
       themeService,
       this._preserveDrawingBuffer,
-      this._canvas?.getContext('webgl2', { 
+      this._canvas?.getContext('webgl2', {
           antialias: false,
           depth: false,
           preserveDrawingBuffer: true,

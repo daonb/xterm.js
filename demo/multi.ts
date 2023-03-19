@@ -1,3 +1,4 @@
+// TEMP: This is a temporary file to test the multi terminal rendering
 
 import { Terminal } from '../out/browser/public/Terminal';
 import { AttachAddon } from '../addons/xterm-addon-attach/out/AttachAddon';
@@ -29,10 +30,10 @@ const term2 = new Terminal({
 
 const canvas = document.getElementById('canvas');
 
-/* canvas.setAttribute('width', canvas.clientWidth.toString());
+canvas.setAttribute('width', canvas.clientWidth.toString());
 canvas.setAttribute('height', "768");
 canvas.style.width = canvas.clientWidth.toString() + "px";
-canvas.style.height = "768px"; */
+canvas.style.height = "768px";
 
 const webglAddon1 = new WebglAddon(canvas);
 term1.loadAddon(webglAddon1);
@@ -44,7 +45,7 @@ term1.open(document.getElementById('term1-container'));
 term1.write("term1")
 fitAddon1.fit();
 
-const webglAddon2 = new WebglAddon(canvas, { x: 50, y: 50, width: 100, height: 100 });
+const webglAddon2 = new WebglAddon(canvas);
 term2.loadAddon(webglAddon2);
 
 const fitAddon2 = new FitAddon();

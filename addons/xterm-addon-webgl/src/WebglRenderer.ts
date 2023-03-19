@@ -39,7 +39,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
   private _cellColorResolver: CellColorResolver;
 
   private _canvas: HTMLCanvasElement;
-  private _globalCanvas: HTMLCanvasElement;
   private _gl: IWebGL2RenderingContext;
   private _rectangleRenderer?: RectangleRenderer;
   private _glyphRenderer?: GlyphRenderer;
@@ -91,7 +90,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
     this.register(_optionsService.onOptionChange(() => this._handleOptionsChanged()));
 
     this._canvas = document.createElement('canvas');
-    this._globalCanvas = document.getElementById('canvas') as HTMLCanvasElement;
 
     const contextAttributes = {
       antialias: false,
@@ -126,9 +124,9 @@ export class WebglRenderer extends Disposable implements IRenderer {
       this._requestRedrawViewport();
     }));
 
-    // this.register(observeDevicePixelDimensions(this._canvas, this._coreBrowserService.window, (w, h) => this._setCanvasDevicePixelDimensions(w, h)));
+    this.register(observeDevicePixelDimensions(this._canvas, this._coreBrowserService.window, (w, h) => this._setCanvasDevicePixelDimensions(w, h)));
 
-    // this._core.screenElement!.appendChild(this._canvas);
+    this._core.screenElement!.appendChild(this._canvas);
 
     [this._rectangleRenderer, this._glyphRenderer] = this._initializeWebGLState();
 
@@ -179,11 +177,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
     this._canvas.height = this.dimensions.device.canvas.height;
     this._canvas.style.width = `${this.dimensions.css.canvas.width}px`;
     this._canvas.style.height = `${this.dimensions.css.canvas.height}px`;
-
-    this._globalCanvas.width = this.dimensions.device.canvas.width;
-    this._globalCanvas.height = this.dimensions.device.canvas.height;
-    this._globalCanvas.style.width = `${this.dimensions.css.canvas.width}px`;
-    this._globalCanvas.style.height = `${this.dimensions.css.canvas.height}px`;
 
     // Resize the screen
     this._core.screenElement!.style.width = `${this.dimensions.css.canvas.width}px`;
@@ -324,7 +317,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
   }
 
   public renderRows(start: number, end: number): void {
-
     if (!this._isAttached) {
       if (this._coreBrowserService.window.document.body.contains(this._core.screenElement!) && this._charSizeService.width && this._charSizeService.height) {
         this._updateDimensions();
