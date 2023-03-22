@@ -329,7 +329,6 @@ export class WebglRenderer extends Disposable implements IRenderer {
     const rect = this._core.screenElement!.getBoundingClientRect(),
       { left, bottom, width, height } = rect;
 
-    this._gl.disable(this._gl.SCISSOR_TEST);
     this._gl.enable(this._gl.SCISSOR_TEST);
 
     this._gl.viewport(left, this._gl.canvas.height - bottom, width, height);
