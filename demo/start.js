@@ -22,7 +22,7 @@ startServer();
  * validating that the packaged version works correctly.
  */
 const clientConfig = {
-  entry: path.resolve(__dirname, 'client.ts'),
+  entry: path.resolve(__dirname, 'multi.ts'),
   devtool: 'inline-source-map',
   module: {
     rules: [

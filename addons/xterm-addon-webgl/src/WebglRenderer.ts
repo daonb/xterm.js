@@ -69,7 +69,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
     private readonly _decorationService: IDecorationService,
     private readonly _optionsService: IOptionsService,
     private readonly _themeService: IThemeService,
-    preserveDrawingBuffer?: boolean
+    preserveDrawingBuffer?: boolean,
+    gl?: WebGL2RenderingContext | null,
   ) {
     super();
 
@@ -95,7 +96,7 @@ export class WebglRenderer extends Disposable implements IRenderer {
       depth: false,
       preserveDrawingBuffer
     };
-    this._gl = this._canvas.getContext('webgl2', contextAttributes) as IWebGL2RenderingContext;
+    this._gl = (gl || this._canvas.getContext('webgl2', contextAttributes)) as IWebGL2RenderingContext;
     if (!this._gl) {
       throw new Error('WebGL2 not supported ' + this._gl);
     }
@@ -325,6 +326,13 @@ export class WebglRenderer extends Disposable implements IRenderer {
         return;
       }
     }
+    const rect = this._core.screenElement!.getBoundingClientRect(),
+      { left, bottom, width, height } = rect;
+
+    this._gl.enable(this._gl.SCISSOR_TEST);
+
+    this._gl.viewport(left, this._gl.canvas.height - bottom, width, height);
+    this._gl.scissor(left, this._gl.canvas.height - bottom, width, height);
 
     // Update render layers
     for (const l of this._renderLayers) {
@@ -366,7 +374,8 @@ export class WebglRenderer extends Disposable implements IRenderer {
     let i: number;
     let x: number;
     let j: number;
-
+    start = clamp(start, terminal.rows - 1, 0);
+    end = clamp(end, terminal.rows - 1, 0);
     for (y = start; y <= end; y++) {
       row = y + terminal.buffer.ydisp;
       line = terminal.buffer.lines.get(row)!;
@@ -569,4 +578,8 @@ export class JoinedCellData extends AttributeData implements ICellData {
   public getAsCharData(): CharData {
     return [this.fg, this.getChars(), this.getWidth(), this.getCode()];
   }
+}
+
+function clamp(value: number, max: number, min: number = 0): number {
+  return Math.max(Math.min(value, max), min);
 }

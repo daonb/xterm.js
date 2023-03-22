@@ -27,7 +27,7 @@ declare module 'xterm-addon-webgl' {
      */
     public readonly onAddTextureAtlasCanvas: IEvent<HTMLCanvasElement>;
 
-    constructor(preserveDrawingBuffer?: boolean);
+    constructor(canvas?: HTMLCanvasElement, preserveDrawingBuffer?: boolean)
 
     /**
      * Activates the addon.
